@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn wait(secs: Option<u8>) {
+pub fn wait(secs: Option<u8>) {
     let timeout: u64 = secs.unwrap_or(6) as u64;
     std::thread::sleep(std::time::Duration::from_secs(timeout));
 }

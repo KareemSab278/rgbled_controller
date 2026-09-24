@@ -55,6 +55,7 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
 
     for (enumerate, led) in leds.iter_mut().enumerate() {
         *led = color.to_rgbw();
+        crate::wait(Some(1));
         println!("Setting LED {} to {:?}", enumerate, color);
     }
 
