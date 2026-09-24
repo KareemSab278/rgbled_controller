@@ -12,16 +12,17 @@ use rs_ws281x::StripType;
 const LED_COUNT: u8 = 64;
 const GPIO_SPI0_MOSI_PIN: u8 = 16;
 
-struct Color {
-    Red: [u8; 4],
-    Green: [u8; 4],
-    Blue: [u8; 4],
-    White: [u8; 4],
-    Yellow: [u8; 4],
+#[derive(Clone, Copy)]
+pub enum Color {
+    Red,
+    Green,
+    Blue,
+    White,
+    Yellow,
 }
 
 impl Color {
-    fn color(&self) -> [u8; 4] {
+    fn to_rgbw(&self) -> [u8; 4] {
         match self {
             Color::Red => [255, 0, 0, 0],
             Color::Green => [0, 255, 0, 0],
@@ -32,16 +33,15 @@ impl Color {
     }
 }
 
-
-fn set_color(&self, color: Color) {
+pub fn set_color(color: Color) {
     let mut controller = ControllerBuilder::new()
         .freq(800_000)
         .dma(10)
         .channel(
             0, // Channel Index
             ChannelBuilder::new()
-                .pin(GPIO_SPI0_MOSI_PIN)
-                .count(LED_COUNT)
+                .pin(GPIO_SPI0_MOSI_PIN as i32)
+                .count(LED_COUNT as i32)
                 .strip_type(StripType::Ws2812)
                 .brightness(255)
                 .build(),
@@ -52,7 +52,7 @@ fn set_color(&self, color: Color) {
     let leds = controller.leds_mut(0);
 
     for led in leds {
-        *led = color.color();
+        *led = color.to_rgbw();
     }
 
     controller.render().unwrap();
