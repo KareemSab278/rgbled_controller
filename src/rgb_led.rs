@@ -10,7 +10,7 @@ use rs_ws281x::ChannelBuilder;
 use rs_ws281x::StripType;
 
 const LED_COUNT: u8 = 64;
-const GPIO_SPI0_MOSI_PIN: u8 = 10;
+const GPIO_SPI0_MOSI_PIN: u8 = 16;
 
 enum Color {
     Red: [u8; 4],
