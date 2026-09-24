@@ -33,7 +33,7 @@ impl Color {
     }
 }
 
-pub fn set_color(color: Color) {
+pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     let mut controller = ControllerBuilder::new()
         .freq(800_000)
         .dma(10)
@@ -47,7 +47,7 @@ pub fn set_color(color: Color) {
                 .build(),
         )
         .build()
-        .unwrap();
+        .expect("Failed to build LED controller");
 
     let leds = controller.leds_mut(0);
 
@@ -55,5 +55,6 @@ pub fn set_color(color: Color) {
         *led = color.to_rgbw();
     }
 
-    controller.render().unwrap();
+    controller.render()?;
+    Ok(())
 }
