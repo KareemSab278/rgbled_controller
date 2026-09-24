@@ -53,9 +53,9 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     let leds = controller.leds_mut(0);
     println!("Number of LEDs: {}", leds.len());
 
-    for led in leds {
-        println!("Setting {led:?} to {color:?}");
+    for (enumerate, led) in leds.iter_mut().enumerate() {
         *led = color.to_rgbw();
+        println!("Setting LED {} to {:?}", enumerate, color);
     }
 
     println!("Colors set to {:?}", color);
