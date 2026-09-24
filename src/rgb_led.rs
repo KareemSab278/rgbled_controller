@@ -12,7 +12,7 @@ use rs_ws281x::StripType;
 const LED_COUNT: u8 = 64;
 const GPIO_SPI0_MOSI_PIN: u8 = 10;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum Color {
     Red,
     Green,
@@ -34,6 +34,7 @@ impl Color {
 }
 
 pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
+    println!("Setting color to {:?}", color);
     let mut controller = ControllerBuilder::new()
         .freq(800_000)
         .dma(10)
@@ -50,11 +51,14 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
         .expect("Failed to build LED controller");
 
     let leds = controller.leds_mut(0);
+    println!("Number of LEDs: {}", leds.len());
 
     for led in leds {
+        println!("Setting {led:?} to {color:?}");
         *led = color.to_rgbw();
     }
 
+    println!("Colors set to {:?}", color);
     controller.render()?;
     Ok(())
 }
