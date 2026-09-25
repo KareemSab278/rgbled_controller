@@ -17,21 +17,18 @@ pub enum Color {
     Red,
     Green,
     Blue,
-    // White,
-    // Yellow,
+    White,
+    Yellow,
 }
 
 impl Color {
     fn to_rgb(&self) -> [u8; 4] {
         match self {
-            // Color::Red    => [0, 0, 255, 0],
-            // Color::Green  => [0, 255, 0, 0],
-            // Color::Blue   => [255, 0, 0, 0],
-            // Color::White  => [255, 255, 255, 0],
-            // Color::Yellow => [0, 255, 255, 0],
-            Color::Red    => [255,0,0,0],
-Color::Green  => [0,255,0,0],
-Color::Blue   => [0,0,255,0],
+            Color::Red    => [0, 0, 255, 0],
+            Color::Green  => [0, 255, 0, 0],
+            Color::Blue   => [255, 0, 0, 0],
+            Color::White  => [255, 255, 255, 0],
+            Color::Yellow => [0, 255, 255, 0],
         }
     }
 }
