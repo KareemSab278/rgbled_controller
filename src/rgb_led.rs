@@ -4,6 +4,7 @@
     using this module: https://crates.io/crates/rs_ws281x/0.5.1 (3 years old 🙏😭)
     max brightness is 255 min is 0. defaults to 255 is empty
 */
+/*
 
 use rs_ws281x::ControllerBuilder;
 use rs_ws281x::ChannelBuilder;
@@ -63,5 +64,86 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Colors set to {:?}", color);
     controller.render()?;
+    Ok(())
+}
+*/
+
+use rs_ws281x::{ChannelBuilder, ControllerBuilder, StripType};
+
+const LED_COUNT: u16 = 148;
+const GPIO_SPI0_MOSI_PIN: u8 = 10;
+
+#[derive(Clone, Copy, Debug)]
+pub enum Color {
+    Red,
+    Green,
+    Blue,
+}
+
+impl Color {
+    fn variations(&self) -> Vec<[u8; 4]> {
+        match self {
+            Color::Red => vec![
+                [255, 0, 0, 0], // RGB
+                [0, 255, 0, 0], // GRB
+                [0, 0, 255, 0], // BRG
+                [255, 0, 0, 255], // RGBW
+                [0, 255, 0, 255], // GRBW
+                [0, 0, 255, 255], // BRGW
+            ],
+
+            Color::Green => vec![
+                [0, 255, 0, 0], // RGB
+                [255, 0, 0, 0], // GRB
+                [0, 0, 255, 0], // BRG
+                [0, 255, 0, 255],
+                [255, 0, 0, 255],
+                [0, 0, 255, 255],
+            ],
+
+            Color::Blue => vec![
+                [0, 0, 255, 0], // RGB
+                [0, 255, 0, 0], // GRB
+                [255, 0, 0, 0], // BRG
+                [0, 0, 255, 255],
+                [0, 255, 0, 255],
+                [255, 0, 0, 255],
+            ],
+        }
+    }
+}
+
+pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
+    println!("Testing {:?}", color);
+
+    let mut controller = ControllerBuilder::new()
+        .freq(800_000)
+        .dma(10)
+        .channel(
+            0,
+            ChannelBuilder::new()
+                .pin(GPIO_SPI0_MOSI_PIN as i32)
+                .count(LED_COUNT as i32)
+                .strip_type(StripType::Ws2812)
+                .brightness(255)
+                .build(),
+        )
+        .build()
+        .expect("Failed to build LED controller");
+
+    let leds = controller.leds_mut(0);
+
+    for (i, variation) in color.variations().iter().enumerate() {
+        println!("Trying variation {} {:?}", i + 1, variation);
+
+        for led in leds.iter_mut() {
+            *led = *variation;
+        }
+
+        controller.render()?;
+
+        std::thread::sleep(std::time::Duration::from_secs(2));
+    }
+
     Ok(())
 }
