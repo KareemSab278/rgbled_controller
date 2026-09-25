@@ -11,6 +11,7 @@ use rs_ws281x::StripType;
 
 const LED_COUNT: u16 = 148;
 const GPIO_SPI0_MOSI_PIN: u8 = 18;
+const IS_PI_5: bool = true;
 
 #[derive(Clone, Copy, Debug)]
 pub enum Color {
@@ -37,9 +38,9 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     println!("Setting color to {:?}", color);
     let mut controller = ControllerBuilder::new()
         .freq(800_000)
-        .dma(10)
+        .dma(if IS_PI_5 { 5 } else { 10 })
         .channel(
-            0, // Channel Index
+            if IS_PI_5 {1} else {0}, // Channel Index
             ChannelBuilder::new()
                 .pin(GPIO_SPI0_MOSI_PIN as i32)
                 .count(LED_COUNT as i32)
