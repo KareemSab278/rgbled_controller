@@ -11,11 +11,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rgb_led::set_color(rgb_led::Color::Blue)?;
     wait(None);
     
-    rgb_led::set_color(rgb_led::Color::Yellow)?;
-    wait(None);
+    // rgb_led::set_color(rgb_led::Color::Yellow)?;
+    // wait(None);
     
-    rgb_led::set_color(rgb_led::Color::White)?;
-    wait(None);
+    // rgb_led::set_color(rgb_led::Color::White)?;
+    // wait(None);
     
     Ok(())
 }
