@@ -4,4 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-rs_ws281x = "0.5.1"
+ws2812-spi = "0.5"
+smart-leds = "0.4"
+smart-leds-trait = "0.3"
+rppal = { version = "0.17", features = ["embedded-hal"] }

@@ -1,17 +1,14 @@
 /*
-    module is meant to control WS2812B RGB LED Strips with the rasp pi 4b using embedded hal
-    there is a good example of this here: https://github.com/rpi-ws281x/rpi-ws281x-rust/blob/master/examples/basic.rs
-    using this module: https://crates.io/crates/rs_ws281x/0.5.1 (3 years old 🙏😭)
-    max brightness is 255 min is 0. defaults to 255 is empty
+    module is meant to control WS2812B RGB LED Strips with the rasp pi 5 using SPI
+    (rs_ws281x relies on PWM/DMA which is unsupported on the Pi 5, hence SPI via ws2812-spi)
+    DIN is wired to GPIO10 (SPI0 MOSI, physical pin 19)
 */
 
-use rs_ws281x::ControllerBuilder;
-use rs_ws281x::ChannelBuilder;
-use rs_ws281x::StripType;
+use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
+use smart_leds_trait::{SmartLedsWrite, RGB8};
+use ws2812_spi::Ws2812;
 
-const LED_COUNT: u16 = 148;
-const GPIO_SPI0_MOSI_PIN: u8 = 18;
-const IS_PI_5: bool = true;
+const LED_COUNT: usize = 148;
 
 #[derive(Clone, Copy, Debug)]
 pub enum Color {
@@ -23,43 +20,26 @@ pub enum Color {
 }
 
 impl Color {
-    fn to_rgb(&self) -> [u8; 4] {
+    fn to_rgb8(&self) -> RGB8 {
         match self {
-            Color::Red    => [0, 0, 255, 0],
-            Color::Green  => [0, 255, 0, 0],
-            Color::Blue   => [255, 0, 0, 0],
-            Color::White  => [255, 255, 255, 0],
-            Color::Yellow => [0, 255, 255, 0],
+            Color::Red => RGB8 { r: 255, g: 0, b: 0 },
+            Color::Green => RGB8 { r: 0, g: 255, b: 0 },
+            Color::Blue => RGB8 { r: 0, g: 0, b: 255 },
+            Color::White => RGB8 { r: 255, g: 255, b: 255 },
+            Color::Yellow => RGB8 { r: 255, g: 255, b: 0 },
         }
     }
 }
 
 pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     println!("Setting color to {:?}", color);
-    let mut controller = ControllerBuilder::new()
-        .freq(800_000)
-        .dma(if IS_PI_5 { 5 } else { 10 })
-        .channel(
-            if IS_PI_5 {1} else {0}, // Channel Index
-            ChannelBuilder::new()
-                .pin(GPIO_SPI0_MOSI_PIN as i32)
-                .count(LED_COUNT as i32)
-                .strip_type(StripType::Ws2812)
-                .brightness(255)
-                .build(),
-        )
-        .build()
-        .expect("Failed to build LED controller");
 
-    let leds = controller.leds_mut(0);
-    println!("Number of LEDs: {}", leds.len());
+    let spi = Spi::new(Bus::Spi0, SlaveSelect::Ss0, 3_000_000, Mode::Mode0)?;
+    let mut controller = Ws2812::new(spi);
 
-    for led in leds.iter_mut() {
-        *led = color.to_rgb();
-    }
-    println!("Finished setting all LEDs to {:?}", color);
+    let leds = vec![color.to_rgb8(); LED_COUNT];
+    controller.write(leds.into_iter())?;
 
     println!("Colors set to {:?}", color);
-    controller.render()?;
     Ok(())
 }
