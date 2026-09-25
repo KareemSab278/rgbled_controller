@@ -37,7 +37,7 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     println!("Setting color to {:?}", color);
     let mut controller = ControllerBuilder::new()
         .freq(800_000)
-        .dma(5)
+        .dma(10)
         .channel(
             0, // Channel Index
             ChannelBuilder::new()
