@@ -9,7 +9,7 @@ use rs_ws281x::ControllerBuilder;
 use rs_ws281x::ChannelBuilder;
 use rs_ws281x::StripType;
 
-const LED_COUNT: u16 = 160;
+const LED_COUNT: u16 = 148;
 const GPIO_SPI0_MOSI_PIN: u8 = 10;
 
 #[derive(Clone, Copy, Debug)]
@@ -43,7 +43,7 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
             ChannelBuilder::new()
                 .pin(GPIO_SPI0_MOSI_PIN as i32)
                 .count(LED_COUNT as i32)
-                .strip_type(StripType::Ws2812)
+                .strip_type(StripType::Ws2811Brg)
                 .brightness(255)
                 .build(),
         )
