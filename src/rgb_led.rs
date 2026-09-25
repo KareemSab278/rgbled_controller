@@ -9,7 +9,7 @@ use rs_ws281x::ControllerBuilder;
 use rs_ws281x::ChannelBuilder;
 use rs_ws281x::StripType;
 
-const LED_COUNT: u8 = 64;
+const LED_COUNT: u8 = 160;
 const GPIO_SPI0_MOSI_PIN: u8 = 10;
 
 #[derive(Clone, Copy, Debug)]
@@ -53,11 +53,10 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     let leds = controller.leds_mut(0);
     println!("Number of LEDs: {}", leds.len());
 
-    for (enumerate, led) in leds.iter_mut().enumerate() {
+    for led in leds.iter_mut() {
         *led = color.to_rgbw();
-        crate::wait(Some(1));
-        println!("Setting LED {} to {:?}", enumerate, color);
     }
+    println!("Finished setting all LEDs to {:?}", color);
 
     println!("Colors set to {:?}", color);
     controller.render()?;
