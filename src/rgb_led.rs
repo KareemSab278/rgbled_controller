@@ -22,12 +22,12 @@ pub enum Color {
 }
 
 impl Color {
-    fn to_rgbw(&self) -> [u8; 4] {
+    fn to_rgb(&self) -> [u8; 4] {
         match self {
-            Color::Red => [255, 0, 0, 0],
-            Color::Green => [0, 255, 0, 0],
-            Color::Blue => [0, 0, 255, 0],
-            Color::White => [0, 0, 0, 255],
+            Color::Red    => [255, 0, 0, 0],
+            Color::Green  => [0, 255, 0, 0],
+            Color::Blue   => [0, 0, 255, 0],
+            Color::White  => [255, 255, 255, 0],
             Color::Yellow => [255, 255, 0, 0],
         }
     }
@@ -43,7 +43,7 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
             ChannelBuilder::new()
                 .pin(GPIO_SPI0_MOSI_PIN as i32)
                 .count(LED_COUNT as i32)
-                .strip_type(StripType::Ws2811Rgb)
+                .strip_type(StripType::Ws2812)
                 .brightness(255)
                 .build(),
         )
@@ -54,7 +54,7 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     println!("Number of LEDs: {}", leds.len());
 
     for led in leds.iter_mut() {
-        *led = color.to_rgbw();
+        *led = color.to_rgb();
     }
     println!("Finished setting all LEDs to {:?}", color);
 
