@@ -84,9 +84,9 @@ impl Color {
     fn variations(&self) -> Vec<[u8; 4]> {
         match self {
             Color::Red => vec![
-                [255, 0, 0, 0], // RGB
-                [0, 255, 0, 0], // GRB
-                [0, 0, 255, 0], // BRG
+                [255, 0, 0, 0],   // RGB
+                [0, 255, 0, 0],   // GRB
+                [0, 0, 255, 0],   // BRG
                 [255, 0, 0, 255], // RGBW
                 [0, 255, 0, 255], // GRBW
                 [0, 0, 255, 255], // BRGW
@@ -131,13 +131,15 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
         .build()
         .expect("Failed to build LED controller");
 
-    let leds = controller.leds_mut(0);
-
     for (i, variation) in color.variations().iter().enumerate() {
         println!("Trying variation {} {:?}", i + 1, variation);
 
-        for led in leds.iter_mut() {
-            *led = *variation;
+        {
+            let leds = controller.leds_mut(0);
+
+            for led in leds.iter_mut() {
+                *led = *variation;
+            }
         }
 
         controller.render()?;
