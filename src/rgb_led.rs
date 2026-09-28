@@ -4,7 +4,7 @@
     using this module: https://crates.io/crates/rs_ws281x/0.5.1 (3 years old 🙏😭)
     max brightness is 255 min is 0. defaults to 255 is empty
 */
-/*
+// /*
 
 use rs_ws281x::ControllerBuilder;
 use rs_ws281x::ChannelBuilder;
@@ -18,21 +18,21 @@ pub enum Color {
     Red,
     Green,
     Blue,
-    // White,
-    // Yellow,
+    White,
+    Yellow,
 }
 
 impl Color {
     fn to_rgb(&self) -> [u8; 4] {
         match self {
-            // Color::Red    => [0, 0, 255, 0],
-            // Color::Green  => [0, 255, 0, 0],
-            // Color::Blue   => [255, 0, 0, 0],
-            // Color::White  => [255, 255, 255, 0],
-            // Color::Yellow => [0, 255, 255, 0],
-            Color::Red    => [255,0,0,0],
-Color::Green  => [0,255,0,0],
-Color::Blue   => [0,0,255,0],
+            Color::Red    => [0, 0, 255, 0],
+            Color::Green  => [0, 255, 0, 0],
+            Color::Blue   => [255, 0, 0, 0],
+            Color::White  => [255, 255, 255, 0],
+            Color::Yellow => [0, 255, 255, 0],
+//             Color::Red    => [255,0,0,0],
+// Color::Green  => [0,255,0,0],
+// Color::Blue   => [0,0,255,0],
         }
     }
 }
@@ -66,8 +66,9 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
     controller.render()?;
     Ok(())
 }
-*/
+// */
 
+/*
 use rs_ws281x::{ChannelBuilder, ControllerBuilder, StripType};
 
 const LED_COUNT: u16 = 148;
@@ -84,10 +85,10 @@ impl Color {
     fn variations(&self) -> Vec<[u8; 4]> {
         match self {
             Color::Red => vec![
-                [255, 0, 0, 0],   // RGB
-                [0, 255, 0, 0],   // GRB
-                [0, 0, 255, 0],   // BRG
-                [255, 0, 0, 255], // RGBW
+                [255, 0, 0, 0],   // RGB <- blue
+                [0, 255, 0, 0],   // GRB <- green
+                [0, 0, 255, 0],   // BRG <- red 
+                [255, 0, 0, 255], // RGBW <- white
                 [0, 255, 0, 255], // GRBW
                 [0, 0, 255, 255], // BRGW
             ],
@@ -149,3 +150,4 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+*/
