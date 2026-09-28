@@ -46,7 +46,7 @@ pub fn set_color(color: Color) -> Result<(), Box<dyn std::error::Error>> {
                 .pin(GPIO_SPI0_MOSI_PIN as i32)
                 .count(LED_COUNT as i32)
                 .strip_type(StripType::Ws2812)
-                .brightness(255)
+                .brightness(32)
                 .build(),
         )
         .build()
