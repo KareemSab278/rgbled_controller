@@ -3,12 +3,14 @@
     there is a good example of this here: https://github.com/rpi-ws281x/rpi-ws281x-rust/blob/master/examples/basic.rs
     using this module: https://crates.io/crates/rs_ws281x/0.5.1 (3 years old 🙏😭)
     max brightness is 255 min is 0. defaults to 255 is empty
+
+    run with cargo build && sudo ./target/debug/rgbled_controller when using the gpio pin 18
 */
 
 use rs_ws281x::{ChannelBuilder, ControllerBuilder, StripType};
 
 const LED_COUNT: u16 = 148;
-const GPIO_SPI0_MOSI_PIN: u8 = 18;
+const GPIO_SPI0_MOSI_PIN: u8 = 18; // you can use gpio pin 10 which is better but it is currently occupied
 
 #[derive(Clone, Copy, Debug)]
 pub enum Color {
