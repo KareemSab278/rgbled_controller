@@ -8,7 +8,7 @@
 use rs_ws281x::{ChannelBuilder, ControllerBuilder, StripType};
 
 const LED_COUNT: u16 = 148;
-const GPIO_SPI0_MOSI_PIN: u8 = 10;
+const GPIO_SPI0_MOSI_PIN: u8 = 18;
 
 #[derive(Clone, Copy, Debug)]
 pub enum Color {
